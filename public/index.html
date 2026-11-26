@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Can You Beat Mama Nkechi?</title>
+<meta name="description" content="Haggle with Mama Nkechi, an AI Lagos market trader, by voice. Built with Speko.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#120c1f; --plum:#2a1640; --gold:#f7b500; --gold-2:#ffd45c; --green:#0fa958; --clay:#e2553a; --cream:#fff7e6;
+  --ink:#fff7e6; --muted:rgba(255,247,230,.62); --glass:rgba(255,247,230,.07); --line:rgba(255,247,230,.14);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:Inter,system-ui,sans-serif;color:var(--ink);background:var(--night);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+/* backdrop: market lights + ankara pattern */
+.bg{position:fixed;inset:0;z-index:-2;background:
+  radial-gradient(60% 50% at 15% 10%,rgba(247,181,0,.22),transparent 60%),
+  radial-gradient(50% 45% at 90% 20%,rgba(226,85,58,.25),transparent 60%),
+  radial-gradient(60% 60% at 70% 100%,rgba(15,169,88,.2),transparent 60%),
+  linear-gradient(160deg,#1b0f2e,#120c1f 60%,#0d0918)}
+.bg::after{content:"";position:absolute;inset:0;opacity:.07;background-image:
+  radial-gradient(circle at 25% 25%,var(--gold) 0 3px,transparent 4px),
+  radial-gradient(circle at 75% 75%,var(--clay) 0 3px,transparent 4px),
+  repeating-linear-gradient(45deg,transparent 0 22px,rgba(255,247,230,.6) 22px 23px),
+  repeating-linear-gradient(-45deg,transparent 0 22px,rgba(255,247,230,.6) 22px 23px);
+  background-size:46px 46px,46px 46px,auto,auto}
+.bunting{position:fixed;top:0;left:0;right:0;height:34px;z-index:-1;display:flex;justify-content:space-around;pointer-events:none}
+.bunting i{width:26px;height:30px;clip-path:polygon(0 0,100% 0,50% 100%);animation:sway 3s ease-in-out infinite;transform-origin:top center}
+.bunting i:nth-child(3n){background:var(--gold)}.bunting i:nth-child(3n+1){background:var(--green)}.bunting i:nth-child(3n+2){background:var(--clay)}
+.bunting i:nth-child(even){animation-delay:-1.5s}
+@keyframes sway{50%{transform:rotate(6deg)}}
+
+.wrap{max-width:1120px;margin:0 auto;padding:56px 24px 32px;min-height:100%;display:flex;flex-direction:column}
+header{text-align:center;margin-bottom:26px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;letter-spacing:.04em;padding:7px 14px;border-radius:99px;background:var(--glass);border:1px solid var(--line);color:var(--gold-2)}
+.eyebrow .dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px rgba(15,169,88,.25)}
+h1{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:clamp(36px,6vw,68px);line-height:1;letter-spacing:-.02em;margin-top:14px}
+h1 em{font-style:normal;color:var(--gold);position:relative}
+h1 em::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:6px;border-radius:6px;background:var(--clay);transform:rotate(-1.5deg)}
+.sub{color:var(--muted);margin-top:12px;font-size:16px}
+
+.stage{flex:1;display:grid;grid-template-columns:1.05fr 1fr;gap:22px;align-items:stretch}
+.card{background:linear-gradient(160deg,rgba(255,247,230,.09),rgba(255,247,230,.03));border:1px solid var(--line);border-radius:28px;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 30px 80px -40px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,247,230,.12)}
+
+/* trader */
+.trader{padding:26px;display:flex;flex-direction:column;align-items:center;position:relative;overflow:hidden}
+.avatar-wrap{position:relative;width:min(300px,70vw);aspect-ratio:1;display:grid;place-items:center;margin-top:6px}
+.ring{position:absolute;inset:0;border-radius:50%;border:2px solid var(--gold);opacity:0}
+.speaking .ring{animation:ring 1.6s ease-out infinite}.speaking .ring:nth-child(2){animation-delay:.5s}.speaking .ring:nth-child(3){animation-delay:1s}
+@keyframes ring{0%{transform:scale(.72);opacity:.75}100%{transform:scale(1.08);opacity:0}}
+.avatar{width:78%;aspect-ratio:1;border-radius:50%;overflow:hidden;background:radial-gradient(circle at 50% 35%,#ffcf4a,#f08a24);box-shadow:0 0 0 6px rgba(255,247,230,.08),0 24px 60px -20px rgba(247,181,0,.6);transition:transform .3s}
+.speaking .avatar{animation:talk .32s ease-in-out infinite alternate}
+@keyframes talk{to{transform:scale(1.025) rotate(-.6deg)}}
+.avatar svg{width:100%;height:100%;display:block}
+.speaking .mouth{animation:mouth .18s ease-in-out infinite alternate;transform-origin:150px 214px}
+@keyframes mouth{to{transform:scaleY(1.9)}}
+.who{text-align:center;margin-top:14px}
+.who b{font-family:"Bricolage Grotesque";font-size:26px;font-weight:800}
+.who span{display:block;color:var(--muted);font-size:14px;margin-top:2px}
+.status{margin-top:14px;display:inline-flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600;padding:8px 14px;border-radius:99px;background:rgba(0,0,0,.25);border:1px solid var(--line)}
+.status i{width:8px;height:8px;border-radius:50%;background:#888}
+.status.live i{background:var(--green);box-shadow:0 0 0 4px rgba(15,169,88,.25)}
+.status.speak i{background:var(--gold);box-shadow:0 0 0 4px rgba(247,181,0,.25)}
+
+/* price tag */
+.right{display:flex;flex-direction:column;gap:18px}
+.price{padding:22px 24px 20px;position:relative}
+.label{font-size:12.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.tagrow{display:flex;align-items:center;gap:18px;margin-top:10px}
+.tag{position:relative;background:var(--gold);color:#2a1640;border-radius:14px 22px 22px 14px;padding:12px 22px 12px 34px;font-family:"Bricolage Grotesque";font-weight:800;font-size:clamp(40px,5.4vw,60px);line-height:1;letter-spacing:-.02em;transform:rotate(-3deg);box-shadow:0 14px 30px -12px rgba(247,181,0,.7);transition:transform .25s}
+.tag::before{content:"";position:absolute;left:12px;top:50%;width:12px;height:12px;margin-top:-6px;border-radius:50%;background:var(--night);box-shadow:inset 0 0 0 2px rgba(42,22,64,.4)}
+.tag.bump{animation:bump .5s cubic-bezier(.3,1.6,.5,1)}
+@keyframes bump{0%{transform:rotate(-3deg) scale(1)}40%{transform:rotate(2deg) scale(1.08)}100%{transform:rotate(-3deg) scale(1)}}
+.was{font-size:15px;color:var(--muted)}
+.was s{color:var(--clay);font-weight:600}
+.meter{margin-top:18px}
+.bar{height:14px;border-radius:99px;background:rgba(0,0,0,.3);border:1px solid var(--line);overflow:hidden}
+.fill{height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--green),var(--gold-2));transition:width .8s cubic-bezier(.2,.8,.2,1)}
+.meter-row{display:flex;justify-content:space-between;margin-top:8px;font-size:13.5px;color:var(--muted)}
+.meter-row b{color:var(--ink);font-weight:600}
+
+/* captions */
+.chat{padding:18px 18px 14px;flex:1;display:flex;flex-direction:column;min-height:230px}
+.msgs{flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:9px;overflow:hidden;margin-top:10px;mask-image:linear-gradient(transparent,#000 30%)}
+.msg{max-width:88%;padding:10px 14px;border-radius:18px;font-size:15px;line-height:1.45;animation:pop .3s ease-out}
+.msg.ai{align-self:flex-start;background:rgba(247,181,0,.14);border:1px solid rgba(247,181,0,.3);border-bottom-left-radius:6px}
+.msg.me{align-self:flex-end;background:rgba(15,169,88,.16);border:1px solid rgba(15,169,88,.35);border-bottom-right-radius:6px}
+.msg small{display:block;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;opacity:.65;margin-bottom:2px}
+.msg.partial{opacity:.65}
+@keyframes pop{from{opacity:0;transform:translateY(8px)}}
+.empty{color:var(--muted);font-size:14.5px;text-align:center;margin:auto}
+
+.controls{display:flex;gap:12px;justify-content:center;margin-top:22px}
+.btn{font:600 17px/1 Inter;border:0;cursor:pointer;border-radius:99px;padding:18px 30px;display:inline-flex;align-items:center;gap:10px;transition:transform .15s,box-shadow .2s}
+.btn:active{transform:scale(.97)}
+.btn.go{background:var(--gold);color:#2a1640;box-shadow:0 16px 36px -14px rgba(247,181,0,.8)}
+.btn.go:hover{box-shadow:0 18px 44px -12px rgba(247,181,0,.95)}
+.btn.end{background:rgba(226,85,58,.18);color:var(--ink);border:1px solid rgba(226,85,58,.5)}
+.btn.ghost{background:var(--glass);color:var(--ink);border:1px solid var(--line)}
+.btn svg{width:20px;height:20px}
+.btn[disabled]{opacity:.5;pointer-events:none}
+.hidden{display:none!important}
+.timer{text-align:center;margin-top:12px;font-weight:600;color:var(--gold-2);font-variant-numeric:tabular-nums}
+.err{text-align:center;color:#ffb3a3;font-size:14px;margin-top:12px;min-height:20px}
+footer{text-align:center;color:var(--muted);font-size:13px;margin-top:18px}
+footer b{color:var(--ink)}
+
+/* deal overlay */
+.deal{position:fixed;inset:0;z-index:20;display:grid;place-items:center;padding:20px;background:rgba(10,6,18,.6);backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .35s}
+.deal.on{opacity:1;pointer-events:auto}
+.result{width:min(440px,100%);padding:30px 28px 26px;text-align:center;transform:scale(.9) rotate(-2deg);transition:transform .5s cubic-bezier(.3,1.5,.5,1)}
+.deal.on .result{transform:none}
+.stamp{display:inline-block;font-family:"Bricolage Grotesque";font-weight:800;font-size:54px;letter-spacing:.04em;color:var(--green);border:5px solid var(--green);border-radius:14px;padding:2px 18px;transform:rotate(-6deg);margin-bottom:12px}
+.result .paid{font-family:"Bricolage Grotesque";font-size:44px;font-weight:800;color:var(--gold)}
+.result .saved{color:var(--muted);margin-top:4px}
+.rank{margin:16px auto 6px;display:inline-block;font-weight:700;font-size:18px;padding:10px 18px;border-radius:99px;background:rgba(247,181,0,.15);border:1px solid rgba(247,181,0,.4)}
+.rank-note{color:var(--muted);font-size:14px}
+.result .btn{margin-top:20px}
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:21}
+
+@media (max-width:860px){.stage{grid-template-columns:1fr}.wrap{padding-top:48px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<div class="bunting" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow"><span class="dot"></span>Balogun Market, Lagos · Voice AI</span>
+    <h1>Can you beat <em>Mama Nkechi?</em></h1>
+    <p class="sub">Talk to her. Haggle hard. See how low you can get the price.</p>
+  </header>
+
+  <main class="stage">
+    <section class="card trader" id="trader">
+      <div class="avatar-wrap">
+        <span class="ring"></span><span class="ring"></span><span class="ring"></span>
+        <div class="avatar" aria-label="Mama Nkechi">
+          <!-- original illustration: market trader with gele -->
+          <svg viewBox="0 0 300 300" aria-hidden="true">
+            <rect width="300" height="300" fill="none"/>
+            <path d="M60 300c6-62 44-92 90-92s84 30 90 92z" fill="#0fa958"/>
+            <path d="M60 300c6-62 44-92 90-92s84 30 90 92z" fill="url(#ank)" opacity=".55"/>
+            <rect x="132" y="196" width="36" height="26" rx="10" fill="#7a4524"/>
+            <ellipse cx="150" cy="168" rx="56" ry="62" fill="#8a4f2a"/>
+            <ellipse cx="96" cy="172" rx="9" ry="13" fill="#7a4524"/><ellipse cx="204" cy="172" rx="9" ry="13" fill="#7a4524"/>
+            <circle cx="96" cy="188" r="5" fill="#f7b500"/><circle cx="204" cy="188" r="5" fill="#f7b500"/>
+            <path d="M84 132c-8-40 30-74 66-74s76 28 68 74c-14-12-30-20-68-20s-52 8-66 20z" fill="#e2553a"/>
+            <path d="M84 132c-8-40 30-74 66-74s76 28 68 74c-14-12-30-20-68-20s-52 8-66 20z" fill="url(#ank2)" opacity=".5"/>
+            <path d="M150 58c30-20 70-14 84 8-20-4-46 0-62 14z" fill="#f7b500"/>
+            <path d="M150 58c-26-22-66-16-80 6 20-4 44 2 58 14z" fill="#ffd45c"/>
+            <path d="M118 158q10-8 20 0" stroke="#2a1640" stroke-width="5" fill="none" stroke-linecap="round"/>
+            <path d="M162 158q10-8 20 0" stroke="#2a1640" stroke-width="5" fill="none" stroke-linecap="round"/>
+            <path d="M113 146q12-7 25-2M162 144q13-5 25 2" stroke="#2a1640" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <path d="M146 166q4 16-4 22" stroke="#6b3a1d" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <ellipse cx="118" cy="190" rx="11" ry="6" fill="#e2553a" opacity=".35"/><ellipse cx="182" cy="190" rx="11" ry="6" fill="#e2553a" opacity=".35"/>
+            <g class="mouth"><path d="M130 206q20 16 40 0q-20 6-40 0z" fill="#5a1d14"/><path d="M134 207q16 5 32 0" stroke="#fff" stroke-width="3" fill="none"/></g>
+            <defs>
+              <pattern id="ank" width="28" height="28" patternUnits="userSpaceOnUse"><circle cx="14" cy="14" r="7" fill="#f7b500"/><circle cx="14" cy="14" r="3" fill="#2a1640"/><path d="M0 0l28 28M28 0L0 28" stroke="#ffd45c" stroke-width="2"/></pattern>
+              <pattern id="ank2" width="22" height="22" patternUnits="userSpaceOnUse"><path d="M11 0l11 11-11 11L0 11z" fill="#ffd45c"/><circle cx="11" cy="11" r="3" fill="#2a1640"/></pattern>
+            </defs>
+          </svg>
+        </div>
+      </div>
+      <div class="who"><b>Mama Nkechi</b><span>Selling: “original” Nike Air Max 👟</span></div>
+      <div class="status" id="status"><i></i><span>Shop is open. Press start</span></div>
+    </section>
+
+    <section class="right">
+      <div class="card price">
+        <div class="label">Her current price</div>
+        <div class="tagrow">
+          <div class="tag" id="tag">₦25,000</div>
+          <div class="was" id="was">Opening price<br><b style="color:var(--ink)">₦25,000</b></div>
+        </div>
+        <div class="meter">
+          <div class="bar"><div class="fill" id="fill"></div></div>
+          <div class="meter-row"><span>You've saved <b id="saved">₦0</b></span><span id="pct">0% off</span></div>
+        </div>
+      </div>
+
+      <div class="card chat">
+        <div class="label">Live conversation</div>
+        <div class="msgs" id="msgs"><p class="empty" id="empty">Press <b>Start haggling</b> and allow your microphone.<br>Then talk to her like you're in the market.</p></div>
+      </div>
+    </section>
+  </main>
+
+  <div class="controls">
+    <button class="btn go" id="start"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 19v3"/></svg>Start haggling</button>
+    <button class="btn ghost hidden" id="mute">Mute mic</button>
+    <button class="btn end hidden" id="stop">Walk away</button>
+  </div>
+  <p class="timer hidden" id="timer"></p>
+  <p class="err" id="err" role="alert"></p>
+  <footer>Mama Nkechi is an AI voice agent built with <b>Speko</b>. Nobody was overcharged in the making of this demo.</footer>
+</div>
+
+<div class="deal" id="deal" role="dialog" aria-modal="true" aria-label="Deal result">
+  <div class="card result">
+    <div class="stamp">DEAL!</div>
+    <div class="paid" id="rPaid">₦0</div>
+    <div class="saved" id="rSaved"></div>
+    <div class="rank" id="rRank"></div>
+    <div class="rank-note" id="rNote"></div>
+    <button class="btn go" id="again">Haggle again</button>
+  </div>
+</div>
+<canvas class="confetti" id="confetti"></canvas>
+
+<script type="module">
+const OPEN = 25000;
+const FLOOR_VISUAL = 10000; // meter end point (not her real floor)
+const $ = (id) => document.getElementById(id);
+const demo = new URLSearchParams(location.search).has('demo');
+let convo = null, price = OPEN, muted = false, dealDone = false, partialEl = null;
+
+const fmt = (n) => '₦' + Math.round(n).toLocaleString('en-NG');
+function setStatus(text, cls = '') { const s = $('status'); s.className = 'status ' + cls; s.querySelector('span').textContent = text; }
+function speaking(on) { $('trader').classList.toggle('speaking', on); setStatus(on ? 'Mama Nkechi is talking…' : 'Your turn. Talk to her', on ? 'speak' : 'live'); }
+
+function setPrice(n) {
+  if (!n || n === price || n > OPEN * 1.2 || n < 1000) return;
+  const prev = price; price = n;
+  const tag = $('tag'); tag.textContent = fmt(n); tag.classList.remove('bump'); void tag.offsetWidth; tag.classList.add('bump');
+  $('was').innerHTML = `Was <s>${fmt(prev)}</s><br>Opening ${fmt(OPEN)}`;
+  const saved = Math.max(0, OPEN - n), pct = Math.round(saved / OPEN * 100);
+  $('saved').textContent = fmt(saved); $('pct').textContent = pct + '% off';
+  $('fill').style.width = Math.min(100, (OPEN - n) / (OPEN - FLOOR_VISUAL) * 100) + '%';
+}
+// Pull the last naira amount she mentions: "₦19,500", "N19,500", "19,500 naira", "19500"
+function findPrice(text) {
+  const re = /(?:₦|\bN|NGN\s?)\s?(\d{1,3}(?:[,.\s]\d{3})+|\d{4,6})|(\d{1,3}(?:,\d{3})+|\d{4,6})\s*(?:naira|k\b)/gi;
+  let m, last = null;
+  while ((m = re.exec(text))) last = parseInt((m[1] || m[2]).replace(/[^\d]/g, ''), 10);
+  const k = [...text.matchAll(/(\d{1,2}(?:\.\d)?)\s?k\b/gi)].pop(); // "19k"
+  if (!last && k) last = Math.round(parseFloat(k[1]) * 1000);
+  return last;
+}
+
+function addMsg(source, text, isFinal) {
+  $('empty')?.remove();
+  const ai = source !== 'user';
+  if (partialEl && partialEl.dataset.src === (ai ? 'ai' : 'me')) { partialEl.querySelector('p').textContent = text; }
+  else { partialEl = document.createElement('div'); partialEl.className = 'msg ' + (ai ? 'ai' : 'me'); partialEl.dataset.src = ai ? 'ai' : 'me';
+    partialEl.innerHTML = `<small>${ai ? 'Mama Nkechi' : 'You'}</small><p></p>`; partialEl.querySelector('p').textContent = text; $('msgs').appendChild(partialEl); }
+  partialEl.classList.toggle('partial', !isFinal);
+  const box = $('msgs'); while (box.children.length > 6) box.firstElementChild.remove();
+  if (ai && isFinal) { const p = findPrice(text); if (p) setPrice(p); if (isFinal && /\bdeal\b/i.test(text) && !dealDone) { dealDone = true; setTimeout(showDeal, 1400); } }
+  if (isFinal) partialEl = null;
+}
+
+function rankFor(n) {
+  if (n <= 12000) return ['🏆 Balogun Legend', 'Even Mama Nkechi respects you. Screenshot this.'];
+  if (n <= 15000) return ['🔥 Lagos Pro', 'You know your market. Respect.'];
+  if (n <= 19000) return ['👍 Small Small', 'Not bad. But Mama still made her profit.'];
+  return ['😅 JJC (Johnny Just Come)', 'Mama Nkechi will eat good tonight, thanks to you.'];
+}
+function showDeal() {
+  const [rank, note] = rankFor(price), saved = OPEN - price;
+  $('rPaid').textContent = fmt(price);
+  $('rSaved').textContent = `You saved ${fmt(saved)} (${Math.round(saved / OPEN * 100)}% off ${fmt(OPEN)})`;
+  $('rRank').textContent = rank; $('rNote').textContent = note;
+  $('deal').classList.add('on'); confetti();
+}
+
+async function start() {
+  $('err').textContent = ''; $('start').disabled = true; setStatus('Opening the shop…', 'live');
+  if (demo) return runDemo();
+  try {
+    const r = await fetch('/api/session', { method: 'POST' });
+    const s = await r.json();
+    if (!r.ok) throw new Error(s.error || 'Could not start a session');
+    const { VoiceConversation } = await import('https://esm.sh/@spekoai/client@0.0.17');
+    convo = await VoiceConversation.create({
+      transportToken: s.transportToken, transportUrl: s.transportUrl,
+      onConnect: () => { setStatus('Connected. Say hello!', 'live'); toggleUI(true); startTimer(); },
+      onDisconnect: () => { toggleUI(false); setStatus('Shop closed. Press start to try again'); },
+      onMessage: ({ source, text, isFinal }) => text && addMsg(source, text, isFinal !== false),
+      onModeChange: (mode) => speaking(mode === 'speaking'),
+      onError: (e) => { console.error(e); $('err').textContent = 'Something went wrong: ' + (e?.message || e); },
+    });
+  } catch (e) {
+    console.error(e); $('err').textContent = e.message; $('start').disabled = false; setStatus('Shop is open. Press start');
+  }
+}
+const LIMIT = 180; let timer = null;
+function startTimer() { let left = LIMIT; clearInterval(timer); $('timer').classList.remove('hidden');
+  const tick = () => { const m = Math.floor(left / 60), sec = String(left % 60).padStart(2, '0'); $('timer').textContent = `⏱ ${m}:${sec} left to haggle`; if (left-- <= 0) { stop(); setStatus('Time up! Market don close. Press start to try again'); } };
+  tick(); timer = setInterval(tick, 1000); }
+async function stop() { clearInterval(timer); $('timer')?.classList.add('hidden'); try { await convo?.endSession(); } catch {} convo = null; demoStop = true; toggleUI(false); speaking(false); setStatus('You walked away. Press start to try again'); }
+function toggleUI(on) { $('start').classList.toggle('hidden', on); $('start').disabled = false; $('mute').classList.toggle('hidden', !on); $('stop').classList.toggle('hidden', !on); }
+$('start').onclick = start;
+$('stop').onclick = stop;
+$('mute').onclick = async () => { muted = !muted; await convo?.setMicMuted(muted); $('mute').textContent = muted ? 'Unmute mic' : 'Mute mic'; };
+$('again').onclick = () => { $('deal').classList.remove('on'); stop(); price = OPEN; dealDone = false; $('tag').textContent = fmt(OPEN); $('was').innerHTML = `Opening price<br><b style="color:var(--ink)">${fmt(OPEN)}</b>`; $('fill').style.width = '0'; $('saved').textContent = '₦0'; $('pct').textContent = '0% off'; $('msgs').innerHTML = ''; };
+
+/* ---- preview mode (?demo=1): a scripted conversation for checking the design, no Speko needed ---- */
+let demoStop = false;
+const SCRIPT = [
+  ['ai', "Ehen! Welcome, my customer! You don see this Nike Air Max? Original, straight from abroad. For you, na ₦25,000 only."],
+  ['user', "Mama, ₦25,000? Na gold dem use make am? I go give you ₦8,000."],
+  ['ai', "₦8,000?! You wan kill me? My pikin school fees dey wait! Okay, because you fine, ₦21,000."],
+  ['user', "Abeg, my friend buy the same one for ₦10,000 yesterday."],
+  ['ai', "Which friend? Bring am come! Oya, ₦17,500. Na last price be that."],
+  ['user', "Okay, I'm walking away now."],
+  ['ai', "Customer, come back! Mama Bisi, you dey see this one? Oya, ₦14,000. Final!"],
+  ['user', "₦13,000 and I'll pay now."],
+  ['ai', "Hmm… you sabi market! DEAL! ₦13,000. You be Lagos pro, my dear."],
+];
+async function runDemo() {
+  demoStop = false; toggleUI(true); setStatus('Preview mode', 'live');
+  for (const [who, text] of SCRIPT) {
+    if (demoStop) return;
+    if (who === 'ai') speaking(true); else setStatus('You are talking…', 'live');
+    const words = text.split(' ');
+    for (let i = 1; i <= words.length; i++) { if (demoStop) return; addMsg(who === 'ai' ? 'ai' : 'user', words.slice(0, i).join(' '), i === words.length); await new Promise(r => setTimeout(r, 110)); }
+    speaking(false); await new Promise(r => setTimeout(r, 900));
+  }
+}
+
+/* ---- confetti ---- */
+function confetti() {
+  const c = $('confetti'), ctx = c.getContext('2d'); c.width = innerWidth; c.height = innerHeight;
+  const cols = ['#f7b500', '#0fa958', '#e2553a', '#fff7e6', '#ffd45c'];
+  const P = Array.from({ length: 160 }, () => ({ x: c.width / 2, y: c.height / 2, vx: (Math.random() - .5) * 18, vy: Math.random() * -16 - 4, s: 6 + Math.random() * 8, r: Math.random() * 6, c: cols[Math.random() * cols.length | 0] }));
+  let t = 0; (function f() { ctx.clearRect(0, 0, c.width, c.height); P.forEach(p => { p.vy += .45; p.x += p.vx; p.y += p.vy; p.r += .1; ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.fillStyle = p.c; ctx.fillRect(-p.s / 2, -p.s / 4, p.s, p.s / 2); ctx.restore(); }); if (++t < 180) requestAnimationFrame(f); else ctx.clearRect(0, 0, c.width, c.height); })();
+}
+</script>
+</body>
+</html>
